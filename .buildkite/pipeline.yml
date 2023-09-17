@@ -1,0 +1,59 @@
+steps:
+  - label: ":julia: Julia {{matrix.julia}}"
+    plugins:
+      - JuliaCI/julia#v1:
+          version: "{{matrix.julia}}"
+      - JuliaCI/julia-test#v1:
+          test_args: "--quickfail"
+    agents:
+      os: "linux"
+      queue: "juliaecosystem"
+      arch: "x86_64"
+    env:
+      GROUP: "CPU"
+    if: build.message !~ /\[skip tests\]/
+    timeout_in_minutes: 240
+    matrix:
+      setup:
+        julia:
+          - "1"
+
+  - label: ":julia: Julia {{matrix.julia}} + CUDA GPU"
+    plugins:
+      - JuliaCI/julia#v1:
+          version: "{{matrix.julia}}"
+      - JuliaCI/julia-test#v1:
+          test_args: "--quickfail"
+    agents:
+      queue: "juliagpu"
+      cuda: "*"
+    env:
+      GROUP: "CUDA"
+    if: build.message !~ /\[skip tests\]/
+    timeout_in_minutes: 240
+    matrix:
+      setup:
+        julia:
+          - "1"
+
+  - label: ":julia: Julia: {{matrix.julia}} + AMD GPU"
+    plugins:
+      - JuliaCI/julia#v1:
+          version: "{{matrix.julia}}"
+      - JuliaCI/julia-test#v1:
+          test_args: "--quickfail"
+    env:
+      JULIA_AMDGPU_CORE_MUST_LOAD: "1"
+      JULIA_AMDGPU_HIP_MUST_LOAD: "1"
+      JULIA_AMDGPU_DISABLE_ARTIFACTS: "1"
+      GROUP: "AMDGPU"
+    agents:
+      queue: "juliagpu"
+      rocm: "*"
+      rocmgpu: "*"
+    if: build.message !~ /\[skip tests\]/
+    timeout_in_minutes: 240
+    matrix:
+      setup:
+        julia:
+          - "1"

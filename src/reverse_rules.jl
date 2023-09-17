@@ -1,6 +1,7 @@
 # `mul!`
 function augmented_primal(config::ConfigWidth{1}, f::Const{typeof(mul!)}, ::Type{<:Const}, 
     C::Union{Const, Duplicated}, A::Union{Const, Duplicated}, B::Union{Const, Duplicated})
+    @warn "Using Custom Reverse Rule for `mul!`" maxlog=1
     mul!(C.val, A.val, B.val)
     primal = needs_primal(config) ? C.val : nothing
     Atape = overwritten(config)[3] ? copy(A.val) : nothing
