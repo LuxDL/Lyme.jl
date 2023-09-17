@@ -1,4 +1,4 @@
-using Aqua, Lyme, SafeTestset, Test
+using Aqua, Lyme, SafeTestsets, Test
 
 @testset "Lyme.jl" begin
     @safetestset "Forward Rules" begin
